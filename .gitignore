@@ -1,0 +1,6 @@
+# Terraform crap you do NOT want in Git
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars         # unless you *want* to commit a non-secret vars file
+crash.log
