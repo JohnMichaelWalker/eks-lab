@@ -1,0 +1,34 @@
+name: Terraform Destroy
+
+on:
+  workflow_dispatch:
+    inputs:
+      really_destroy:
+        description: "Type YES to confirm!"
+        required: true
+
+env:
+  AWS_REGION: eu-west-2
+  TF_IN_AUTOMATION: "true"
+
+jobs:
+  destroy:
+    if: github.event.inputs.really_destroy == 'YES'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        run: |
+          mkdir -p ~/.aws
+          cat <<EOF > ~/.aws/credentials
+          [default]
+          aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region=${{ env.AWS_REGION }}
+          EOF
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - run: terraform init -input=false
+      - run: terraform destroy -input=false -auto-approve
