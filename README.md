@@ -17,5 +17,7 @@ TODO: Create an IAM user in AWS and add the AWS_ACCESS_KEY_ID and AWS_SECRET_ACC
 ## Making changes
 Terraform apply will automatically be ran on any changes that are merged to main.
 
-## Terraform Destroy
+## Saving Money
 There is a terraform destroy action which can be used to destroy everything except the bootstrapped bit, this is useful if you're trying to keep costs down.
+
+
