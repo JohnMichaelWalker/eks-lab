@@ -12,5 +12,10 @@ pip install -r requirements.txt
 python bootstrap.py
 ```
 
-Create an IAM user in AWS and add the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as repository secrets to this repository. (TODO add this to bootstrap script)
+TODO: Create an IAM user in AWS and add the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as repository secrets to this repository. (TODO add this to bootstrap script)
 
+## Making changes
+Terraform apply will automatically be ran on any changes that are merged to main.
+
+## Terraform Destroy
+There is a terraform destroy action which can be used to destroy everything except the bootstrapped bit, this is useful if you're trying to keep costs down.
