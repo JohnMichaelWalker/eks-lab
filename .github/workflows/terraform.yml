@@ -20,7 +20,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Verify S3 access
+        run: aws s3 ls s3://boss-eks-lab-terraform-state/
+
       - uses: hashicorp/setup-terraform@v3
 
-      - run: terraform init -input=false
+      - name: Terraform Init (force backend reconfig)
+        run: terraform init -input=false -reconfigure
+        
       - run: terraform apply -input=false -auto-approve
