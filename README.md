@@ -20,4 +20,3 @@ Terraform apply will automatically be ran on any changes that are merged to main
 ## Saving Money with terraform destroy
 There is a terraform destroy action which can be used to destroy everything except the bootstrapped bit, this is useful if you're trying to keep costs down.
 
-
