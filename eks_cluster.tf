@@ -64,25 +64,3 @@ resource "aws_eks_access_policy_association" "root_user_admin" {
     type = "cluster"
   }
 }
-
-# Add CI user access to the cluster
-resource "aws_eks_access_entry" "ci_user" {
-  cluster_name  = module.eks.cluster_name
-  principal_arn = "arn:aws:iam::022239501643:user/eks-lab-github-terraform-ci"
-  type          = "STANDARD"
-
-  tags = {
-    Project = "eks-lab"
-  }
-}
-
-# Associate admin policy with CI user
-resource "aws_eks_access_policy_association" "ci_user_admin" {
-  cluster_name  = module.eks.cluster_name
-  principal_arn = aws_eks_access_entry.ci_user.principal_arn
-  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
-
-  access_scope {
-    type = "cluster"
-  }
-}
