@@ -3,6 +3,11 @@ name: Terraform Apply
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      really_destroy:
+        description: "Type YES to confirm!"
+        required: true
 
 env:
   AWS_REGION: eu-west-2
@@ -10,6 +15,7 @@ env:
 
 jobs:
   tf:
+    environment: terraform
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

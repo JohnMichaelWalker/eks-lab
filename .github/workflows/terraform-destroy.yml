@@ -13,6 +13,7 @@ env:
 
 jobs:
   destroy:
+    environment: terraform
     if: github.event.inputs.really_destroy == 'YES'
     runs-on: ubuntu-latest
     steps:
