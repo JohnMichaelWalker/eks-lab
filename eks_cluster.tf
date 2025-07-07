@@ -68,7 +68,7 @@ resource "aws_eks_access_policy_association" "root_user_admin" {
 # Add eks deployer user access to the cluster
 resource "aws_eks_access_entry" "eks_deployer_user" {
   cluster_name  = module.eks.cluster_name
-  principal_arn = arn:aws:iam::022239501643:user/eks-lab-eks-deployer
+  principal_arn = "arn:aws:iam::022239501643:user/eks-lab-eks-deployer"
   type = "STANDARD"
 
   tags = {
