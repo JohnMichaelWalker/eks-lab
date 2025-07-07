@@ -64,3 +64,24 @@ resource "aws_eks_access_policy_association" "root_user_admin" {
     type = "cluster"
   }
 }
+
+# Add eks deployer user access to the cluster
+resource "aws_eks_access_entry" "eks_deployer_user" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = arn:aws:iam::022239501643:user/eks-lab-eks-deployer
+  type = "STANDARD"
+
+  tags = {
+    Project = "eks-lab"
+  }
+}
+
+resource "aws_eks_access_policy_association" "eks_deployer_user_admin" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = aws_eks_access_entry.eks_deployer_user.principal_arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+}
