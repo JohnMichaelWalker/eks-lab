@@ -10,6 +10,7 @@ on:
 env:
   AWS_REGION: eu-west-2
   TF_IN_AUTOMATION: "true"
+  CLUSTER_NAME: eks-lab-cluster
 
 jobs:
   destroy:
@@ -26,7 +27,50 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - uses: hashicorp/setup-terraform@v3
+      - name: Install Helm
+        uses: azure/setup-helm@v4.3.0
 
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+          --name "eks-lab-cluster" \
+          --region "$AWS_REGION"
+
+      # Uninstall all the helm stuff, this should remove all the aws bits like LBs that were created by controllers
+      # Timeout is 20 mins as sometimes LBs take ages to go away
+      - name: Uninstall all Helm releases
+        run: |
+          helm ls -A --output json \
+          | jq -r '.[] | "\(.namespace);\(.name)"' \
+          | sort -t';' -k1,1 -k2,2r \
+          | while IFS=';' read -r ns rel; do
+             echo "- $rel ($ns)"
+             helm uninstall "$rel" -n "$ns" --wait --timeout 20m
+           done
+
+      # Make very sure that the LBs and SGs are gone, otherwise they'll be orphaned by the terraform destroy
+      # This step shouldn't technically be necessary if the previous steps work as they should
+      - name: Wait for AWS LBs & SGs to disappear
+        timeout-minutes: 15
+        run: |
+          until \
+          [ -z "$(aws elbv2 describe-load-balancers --query "LoadBalancers[?contains(TagDescriptions[0].Tags[?Key=='kubernetes.io/cluster/${CLUSTER_NAME}'].Value,'owned')].LoadBalancerArn" --output text)" ] \
+          && \
+          [ -z "$(aws ec2 describe-security-groups --filters "Name=tag:kubernetes.io/cluster/${CLUSTER_NAME},Values=owned" --query "SecurityGroups[].GroupId" --output text)" ]; do
+          echo "…still waiting"; sleep 15
+          done
+          echo "AWS clean"
+
+      # Delete CRDs in case they refer to something external
+      - name: Delete cluster‑scoped CRDs
+        run: |
+          kubectl get crd -o name \
+          | grep -v 'apiextensions.k8s.io' \
+          | xargs -r kubectl delete --wait=true
+
+      - uses: hashicorp/setup-terraform@v3
       - run: terraform init -input=false
       - run: terraform destroy -input=false -auto-approve

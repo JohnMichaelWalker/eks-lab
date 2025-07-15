@@ -12,7 +12,10 @@ pip install -r requirements.txt
 python bootstrap.py
 ```
 
-TODO: Create an IAM user in AWS and add the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as repository secrets to this repository. (TODO add this to bootstrap script)
+TODO: Also, create an IAM user in AWS and add the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as repository secrets to this repository. (TODO add this to bootstrap script)
+
+TODO: Also, register a domain with Route53
+
 
 ## Making changes
 Terraform apply will automatically be ran on any changes that are merged to main.
