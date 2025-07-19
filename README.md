@@ -16,6 +16,8 @@ TODO: Also, create an IAM user in AWS and add the AWS_ACCESS_KEY_ID and AWS_SECR
 
 TODO: Also, register a domain with Route53
 
+TODO: Also, created a DNS record Type A that points at my Load Balancer (This isn't going to work long term, temporary)
+
 
 ## Making changes
 Terraform apply will automatically be ran on any changes that are merged to main.
