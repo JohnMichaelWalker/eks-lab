@@ -28,7 +28,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init (force backend reconfig)
+      - name: Terraform Init
         run: terraform init -input=false -reconfigure
         
       - run: terraform apply -input=false -auto-approve

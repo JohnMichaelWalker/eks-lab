@@ -1,4 +1,5 @@
 # eks-lab
+Will fully set up an EKS cluster called "eks-lab-cluster"
 
 ## Bootstrapping
 Only needs to be ran initially with fresh AWS account
