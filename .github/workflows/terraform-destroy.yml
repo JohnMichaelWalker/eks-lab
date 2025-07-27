@@ -46,7 +46,7 @@ jobs:
         if: steps.check_cluster.outputs.exists == 'true'
         run: |
           aws eks update-kubeconfig \
-          --name "eks-lab-cluster" \
+          --name "$CLUSTER_NAME" \
           --region "$AWS_REGION"
 
       # Uninstall all the helm stuff, this should remove all the aws bits like LBs that were created by controllers
