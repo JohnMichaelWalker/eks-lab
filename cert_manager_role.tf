@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "cert_manager_assume_role" {
 
 # 2.  IAM Role
 resource "aws_iam_role" "cert_manager_iam_role" {
-  name               = "cert-manager-role"
+  name               = "cert-manager"
   assume_role_policy = data.aws_iam_policy_document.cert_manager_assume_role.json
 }
 
