@@ -1,5 +1,5 @@
 # 1.  Assume Role Policy document
-data "aws_iam_policy_document" "assume_role" {
+data "aws_iam_policy_document" "external_dns_assume_role" {
   statement {
     effect = "Allow"
     actions = ["sts:AssumeRoleWithWebIdentity"]
@@ -24,13 +24,13 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 # 2.  IAM Role
-resource "aws_iam_role" "external_dns" {
+resource "aws_iam_role" "external_dns_iam_role" {
   name               = "external-dns-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.external_dns_assume_role.json
 }
 
 # 3.  Permissions Policy document
-data "aws_iam_policy_document" "permissions_policy" {
+data "aws_iam_policy_document" "external_dns_permissions" {
   statement {
     sid    = "ChangeRecordsInZones"
     effect = "Allow"
@@ -54,13 +54,13 @@ data "aws_iam_policy_document" "permissions_policy" {
 }
 
 # 4.  IAM Policy
-resource "aws_iam_policy" "external_dns_policy" {
+resource "aws_iam_policy" "external_dns_iam_policy" {
   name   = "ExternalDnsPolicy"
-  policy = data.aws_iam_policy_document.permissions_policy.json
+  policy = data.aws_iam_policy_document.external_dns_permissions.json
 }
 
 # 5.  Attach Policy to Role
-resource "aws_iam_role_policy_attachment" "attach" {
-  role       = aws_iam_role.external_dns.name
-  policy_arn = aws_iam_policy.external_dns_policy.arn
+resource "aws_iam_role_policy_attachment" "external_dns_attachment" {
+  role       = aws_iam_role.external_dns_iam_role.name
+  policy_arn = aws_iam_policy.external_dns_iam_policy.arn
 }

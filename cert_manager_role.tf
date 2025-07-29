@@ -42,7 +42,8 @@ data "aws_iam_policy_document" "cert_manager_permissions" {
     effect = "Allow"
     actions = [
       "route53:ListHostedZones",
-      "route53:ListResourceRecordSets"
+      "route53:ListResourceRecordSets",
+      "route53:GetChange"
     ]
     resources = ["*"]
   }
@@ -51,7 +52,7 @@ data "aws_iam_policy_document" "cert_manager_permissions" {
 # 4.  IAM Policy
 resource "aws_iam_policy" "cert_manager_iam_policy" {
   name   = "CertManagerPolicy"
-  policy = data.aws_iam_policy_document.permissions_policy.json
+  policy = data.aws_iam_policy_document.cert_manager_permissions.json
 }
 
 # 5.  Attach Policy to Role
