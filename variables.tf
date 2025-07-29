@@ -21,3 +21,15 @@ variable "external_dns_service_account_name" {
   type = string
   default = "external-dns"
 }
+
+variable "cert_manager_namespace" {
+  description = "Namespace that the cert-manager is in"
+  type = string
+  default = "cert-manager"
+}
+
+variable "cert_manager_service_account_name" {
+  description = "Service account name for the cert-manager"
+  type = string
+  default = "cert-manager"
+}
