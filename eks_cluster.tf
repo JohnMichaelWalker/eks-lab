@@ -13,7 +13,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     spot_nodes = {
-      instance_types = ["t4g.medium"]
+      instance_types = ["t4g.medium", "c6g.large"]
       capacity_type = "SPOT"
       ami_type = "AL2_ARM_64"
       min_size = 2
@@ -36,10 +36,6 @@ module "eks" {
     coredns = {
       resolve_conflicts = "OVERWRITE"
     }
-  } 
-
-  tags = {
-    Project = "eks-lab"
   }
 }
 
@@ -48,10 +44,6 @@ resource "aws_eks_access_entry" "root_user" {
   cluster_name  = module.eks.cluster_name
   principal_arn = "arn:aws:iam::022239501643:root"
   type          = "STANDARD"
-
-  tags = {
-    Project = "eks-lab"
-  }
 }
 
 # Associate admin policy with root user
@@ -70,10 +62,6 @@ resource "aws_eks_access_entry" "eks_deployer_user" {
   cluster_name  = module.eks.cluster_name
   principal_arn = "arn:aws:iam::022239501643:user/eks-lab-eks-deployer"
   type = "STANDARD"
-
-  tags = {
-    Project = "eks-lab"
-  }
 }
 
 resource "aws_eks_access_policy_association" "eks_deployer_user_admin" {
