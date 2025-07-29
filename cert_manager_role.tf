@@ -17,7 +17,7 @@ data "aws_iam_policy_document" "cert_manager_assume_role" {
 
     condition {
       test     = "StringEquals"
-      variable = "${local.oidc_provider_hostpath}:sub"
+      variable = "${replace(module.eks.cluster_oidc_issuer_url, "https://", "")}:sub"
       values = ["system:serviceaccount:${var.cert_manager_namespace}:${var.cert_manager_service_account_name}"]
     }
   }
