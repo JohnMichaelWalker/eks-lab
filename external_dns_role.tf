@@ -1,8 +1,3 @@
-locals {
-  # EKS OIDC issuer URL **without** the https:// scheme, required for trust policy condition keys
-  oidc_provider_hostpath = replace(module.eks.cluster_oidc_issuer_url, "https://", "")
-}
-
 # 1.  Assume Role Policy document
 data "aws_iam_policy_document" "assume_role" {
   statement {
@@ -16,13 +11,13 @@ data "aws_iam_policy_document" "assume_role" {
 
     condition {
       test     = "StringEquals"
-      variable = "${local.oidc_provider_hostpath}:aud"
+      variable = "${replace(module.eks.cluster_oidc_issuer_url, "https://", "")}:aud"
       values = ["sts.amazonaws.com"]
     }
 
     condition {
       test     = "StringEquals"
-      variable = "${local.oidc_provider_hostpath}:sub"
+      variable = "${replace(module.eks.cluster_oidc_issuer_url, "https://", "")}:sub"
       values = ["system:serviceaccount:${var.external_dns_namespace}:${var.external_dns_service_account_name}"]
     }
   }
